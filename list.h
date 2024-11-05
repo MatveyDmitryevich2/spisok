@@ -24,7 +24,6 @@ struct Info_list // FIXME просто List
 
 void list_ctor(Info_list* list);
 void list_dtor(Info_list* list);
-void dump(Info_list* list);
 
 // FIXME new -> insert
 void new_middle_elem(Info_list* list, spisok_elem_tipe new_elem, int64_t index_elem);

@@ -8,6 +8,7 @@
 
 
 #include "list.h"
+#include "dump_file.h"
 
 int main()
 {
@@ -20,6 +21,9 @@ int main()
     new_tail_elem(&list, -1);
     new_tail_elem(&list, 87);
     new_head_elem(&list, 333);
+    new_middle_elem(&list, 250, 4);
+    new_tail_elem(&list, -1);
+
 
 
     dump(&list);

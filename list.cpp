@@ -110,25 +110,3 @@ void modify_elem(Info_list* list, spisok_elem_tipe new_elem, int64_t index_elem)
 {
     list->node[index_elem].list = new_elem;
 }
-
-void dump(Info_list* list)
-{
-    for (int64_t i = 0; i < SIZE_LIST; i++) { fprintf(stderr, "%-7ld", i); }
-    fprintf(stderr, "\n");
-    fprintf(stderr, "\n");
-
-    for (int64_t i = 0; i < SIZE_LIST; i++) { fprintf(stderr, "%-6ld ", list->node[i].list); }
-    fprintf(stderr, "\n");
-
-    for (int64_t i = 0; i < SIZE_LIST; i++) { fprintf(stderr, "%-6ld ", list->node[i].next); }
-    fprintf(stderr, "\n");
-    
-    for (int64_t i = 0; i < SIZE_LIST; i++) { fprintf(stderr, "%-6ld ", list->node[i].prev); }
-    fprintf(stderr, "\n");
-
-    fprintf(stderr, "\n");
-    fprintf(stderr, "\n");
-    fprintf(stderr, "--------------------------------------\n");
-
-    fprintf(stderr, "--------------------------------------\n");
-}
