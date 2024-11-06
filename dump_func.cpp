@@ -64,17 +64,13 @@ void dump(List* list)
     fprintf(file_dump, "}\n");
 
 
+    fclose (file_dump);
     
     char command[256];
     snprintf(command, sizeof(command), "dot -Tpng %s -o %.22s.png", filename, filename);
-    fprintf(stderr, "command: %s\n", command);
-    int status = system (command);
-    fprintf(stderr, "status: %d\n", status);
-    // system("dot --help");
-    // system("pwd");
+    system (command);
 
     snprintf (filename, sizeof(filename), "file_%ld_%06ld.png",  seconds, microseconds);
     fprintf (file_html,       "<img src=\"%s\"/>\n", filename);
-    fclose (file_dump);
     fclose (file_html);
 }
