@@ -8,8 +8,9 @@
 
 
 #include "list.h"
+#include "dump_file.h"
 
-void list_ctor(Info_list* list)
+void list_ctor(List* list)
 {
     assert(list != NULL);
 
@@ -25,7 +26,7 @@ void list_ctor(Info_list* list)
     list->free = 1;
 }
 
-void list_dtor(Info_list* list)
+void list_dtor(List* list)
 {
     assert(list != NULL);
 
@@ -33,14 +34,14 @@ void list_dtor(Info_list* list)
     list = NULL;
 }
 
-void new_middle_elem(Info_list* list, spisok_elem_tipe new_elem, int64_t index_elem)
+void insert_middle_elem(List* list, list_elem_tipe new_elem, int64_t index_elem)
 {
     assert(list != NULL);
 
     int64_t old_next = list->node[index_elem].next;
     int64_t new_free = list->node[list->free].next;
 
-    list->node[list->free].list = new_elem;
+    list->node[list->free].elem = new_elem;
     
     list->node[index_elem].next = list->free;
     list->node[list->free].prev = index_elem;
@@ -48,23 +49,29 @@ void new_middle_elem(Info_list* list, spisok_elem_tipe new_elem, int64_t index_e
     list->node[old_next].prev = list->free;
     
     list->free = new_free;
+
+    dump(list);
 }
 
-void new_tail_elem(Info_list* list, spisok_elem_tipe new_elem)
+void insert_tail_elem(List* list, list_elem_tipe new_elem)
 {
     assert(list != NULL);
 
-    new_middle_elem(list, new_elem, list->node[0].prev);
+    insert_middle_elem(list, new_elem, list->node[0].prev);
+
+    dump(list);
 }
 
-void new_head_elem(Info_list* list, spisok_elem_tipe new_elem)
+void insert_head_elem(List* list, list_elem_tipe new_elem)
 {
     assert(list != NULL);
 
-    new_middle_elem(list, new_elem, 0);
+    insert_middle_elem(list, new_elem, 0);
+
+    dump(list);
 }
 
-void erase_middle_elem(Info_list* list, int64_t index_elem)// не проверенная
+void erase_middle_elem(List* list, int64_t index_elem)// не проверенная
 {
     assert(list != NULL);
 
@@ -75,38 +82,46 @@ void erase_middle_elem(Info_list* list, int64_t index_elem)// не провер�
 
     list->node[index_elem].next = list->free;
     list->free = index_elem;
+
+    dump(list);
 }
 
-void erase_head_elem(Info_list* list)// не проверенная
+void erase_head_elem(List* list)// не проверенная
 {
     assert(list != NULL);
 
     erase_middle_elem(list, list->node[0].next);
+
+    dump(list);
 }
 
-void erase_tail_elem(Info_list* list)// не проверенная
+void erase_tail_elem(List* list)// не проверенная
 {
     assert(list != NULL);
 
     erase_middle_elem(list, list->node[0].prev);
+
+    dump(list);
 }
 
-int64_t ix_next_elem(Info_list* list, int64_t index_elem)// не проверенная
+int64_t ix_next_elem(List* list, int64_t index_elem)// не проверенная
 {
     return list->node[index_elem].next;
 }
 
-int64_t ix_last_elem(Info_list* list, int64_t index_elem)// не проверенная
+int64_t ix_last_elem(List* list, int64_t index_elem)// не проверенная
 {
     return list->node[index_elem].prev;
 }
 
-spisok_elem_tipe element(Info_list* list, int64_t index_elem)// не проверенная
+list_elem_tipe element(List* list, int64_t index_elem)// не проверенная
 {
-    return list->node[index_elem].list;
+    return list->node[index_elem].elem;
 }
 
-void modify_elem(Info_list* list, spisok_elem_tipe new_elem, int64_t index_elem)// не проверенная
+void modify_elem(List* list, list_elem_tipe new_elem, int64_t index_elem)// не проверенная
 {
-    list->node[index_elem].list = new_elem;
+    list->node[index_elem].elem = new_elem;
+
+    dump(list);
 }

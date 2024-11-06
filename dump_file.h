@@ -5,6 +5,6 @@
 
 #include "list.h"
 
-void dump(Info_list* list);
+void dump(List* list);
 
 #endif //DUMP_FILE_H

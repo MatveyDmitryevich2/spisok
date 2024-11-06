@@ -1,13 +1,30 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+#include <string.h>
+#include <sys/time.h>
+#include <iostream>
+#include <unistd.h>
 
 #include "list.h"
 #include "dump_file.h"
 
-void dump(Info_list* list)
+void dump(List* list)
 {
-    FILE* file_dump = fopen("graph.dot", "w");
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+
+    long seconds = tv.tv_sec;
+    long microseconds = tv.tv_usec;
+    
+    char filename[100] = {0};
+    snprintf (filename, sizeof(filename), "file_%ld_%06ld.dot",  seconds, microseconds);
+    FILE* file_html = fopen ("dump.html", "a+");
+    FILE* file_dump = fopen (filename, "a+");
+
 
     fprintf(file_dump, "\n");
     fprintf(file_dump, "    digraph structs {\n");
@@ -28,7 +45,7 @@ void dump(Info_list* list)
     for (size_t i = 0; i < SIZE_LIST; i++)
     {
         fprintf(file_dump,"    node%lu [shape=record, style=rounded, label = \"{ip: %lu|<f1> data: %ld | <f2> next: %ld | <f3> prev: %ld}\"];\n", i, i,
-        list->node[i].list,
+        list->node[i].elem,
         list->node[i].next, list->node[i].prev);
     }
 
@@ -39,11 +56,25 @@ void dump(Info_list* list)
         fprintf(file_dump, "    node%lu:f2 -> node%ld:f1 [tailport=e, headport=w];\n", i, list->node[i].next);
     }
 
-    fprintf(file_dump, "    free [shape = record, label =\"free\n->\nnodes%ld\", style = rounded];\n", list->free);
+    fprintf(file_dump, "    free [shape = record, label =\"free->node%ld\", style = rounded];\n", list->free);
     fprintf(file_dump, "    free -> node%ld [tailport=e, headport=w];\n", list->free);
 
     fprintf(file_dump, "    { rank = same; node0; node1; node2; node3; node4; node5; node6; node7; node8; node9; free;}\n");
 
     fprintf(file_dump, "}\n");
-    fclose(file_dump);
+
+
+    
+    char command[256];
+    snprintf(command, sizeof(command), "dot -Tpng %s -o %.22s.png", filename, filename);
+    fprintf(stderr, "command: %s\n", command);
+    int status = system (command);
+    fprintf(stderr, "status: %d\n", status);
+    // system("dot --help");
+    // system("pwd");
+
+    snprintf (filename, sizeof(filename), "file_%ld_%06ld.png",  seconds, microseconds);
+    fprintf (file_html,       "<img src=\"%s\"/>\n", filename);
+    fclose (file_dump);
+    fclose (file_html);
 }
